@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'bio',
+        'profile_image',
+
     ];
 
     /**
@@ -45,4 +50,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+        public function collections(){
+        return $this->hasMany(Collection::class,'user_id');
+    }
+
+    public function artworks(){
+        return $this->hasMany(ArtWork::class,'user_id');
+    }
+
+    public function getProfileImageAttribute($value){
+        return $value ? asset('storage/'. $value) : asset('images/default-avatar.png');
+    }
+
+
 }
