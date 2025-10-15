@@ -4,15 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\ArtWork;
 use Illuminate\Http\Request;
+use App\Repositories\Interfaces\CollectionRepositoryInterface;
+use App\Repositories\Interfaces\ArtWorkImageRepositoryInterface;
 
 class ArtWorkController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+   protected $artWorkRepo;
+   protected $collectionRepo;
+
+    public function __construct(ArtWorkImageRepositoryInterface $artWorkRepo,CollectionRepositoryInterface $collectionRepo){
+        $this->artWorkRepo= $artWorkRepo;
+        $this->collectionRepo= $collectionRepo;
+
+    }
+    public function index(Request $request, $collcetionId)
     {
-        //
+        $collection = $this->collectionRepo->find($collcetionId);
+        
+        
     }
 
     /**

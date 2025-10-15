@@ -17,6 +17,30 @@ class ArtWorkRepository implements ArtWorkRepositoryInterface{
     public function all($userId){
         return ArtWork::where('user_id',$userId)->paginate(6);
     }
+
+    public function allByCollection($collectionId, $search, $sort){
+        $query= ArtWork::where('collection_id',$collectionId)->paginate(6);
+        if($search){
+         $query->where('title','like', "%{$search}%" );
+        }
+        switch($sort){
+         case 'a_z';
+         $query->orderBy('title','asc');
+         break;
+         case 'z_a';
+         $query->orderBy('title','desc');
+         break;
+         case 'newest';
+         $query->orderBy('created_at','desc');
+         break;
+         case 'oldest';
+         $query->orderBy('created_at','asc');
+         break;
+         default;
+         $query->latest();
+        }
+         
+    }
     public function find($id){
     return  ArtWork::with('images')->findOrFail($id);
         
