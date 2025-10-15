@@ -17,7 +17,8 @@ class ArtWorkRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'cover_img' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'price' => 'required|numeric|min:0',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

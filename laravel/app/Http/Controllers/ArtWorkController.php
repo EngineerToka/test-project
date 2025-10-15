@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ArtWork;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ArtWorkRequest;
 use App\Repositories\Interfaces\CollectionRepositoryInterface;
 use App\Repositories\Interfaces\ArtWorkImageRepositoryInterface;
 
@@ -19,56 +21,48 @@ class ArtWorkController extends Controller
     }
     public function index(Request $request, $collcetionId)
     {
+        $search = $request->input('search');
+        $sort = $request->input('sort');
         $collection = $this->collectionRepo->find($collcetionId);
+        $artWorks= $this->artWorkRepo->allByCollection($collcetionId,$search,$sort);
+
+          return view('frontend.index',compact('$collection','artWorks','search','sort'));
         
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create($collcetionId)
     {
-        //
+         $collection = $this->collectionRepo->find($collcetionId);
+        return view('frontend.index',compact('$collection'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ArtWorkRequest $request,$collcetionId)
     {
-        //
+        $data = $request->validated();
+        $data['user_id'] = Auth::id();
+        $data['collection_id'] = $collcetionId;
+        $this->artWorkRepo->create($data);
+
+      return redirect()->route('frontend.index', $collectionId)->with('success', 'Artwork added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ArtWork $artWork)
+    public function edit($id)
     {
-        //
+        $artWork= $this->artWorkRepo->find($id);
+        return view('frontend.index',compact('artWork'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ArtWork $artWork)
+    public function update(ArtWorkRequest $request, $id)
     {
-        //
+        $data = $request->validated();
+        $this->artWorkRepo->update($data,$id);
+          return redirect()->route('artworks.index', $collectionId)->with('success', 'Artwork updated successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ArtWork $artWork)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ArtWork $artWork)
-    {
-        //
+        $this->artWorkRepo->delete($id);
+          return redirect()->route('artworks.index', $collectionId)->with('success', 'Artwork deleted successfully.');
     }
 }

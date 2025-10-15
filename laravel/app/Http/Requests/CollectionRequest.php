@@ -17,8 +17,7 @@ class CollectionRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'cover_img' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

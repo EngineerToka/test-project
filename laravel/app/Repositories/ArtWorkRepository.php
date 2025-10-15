@@ -19,10 +19,12 @@ class ArtWorkRepository implements ArtWorkRepositoryInterface{
     }
 
     public function allByCollection($collectionId, $search, $sort){
-        $query= ArtWork::where('collection_id',$collectionId)->paginate(6);
+
+        $query= ArtWork::where('collection_id',$collectionId);
+        
         if($search){
-         $query->where('title','like', "%{$search}%" );
-        }
+            $query->where('title','like', "%{$search}%" );
+          }
         switch($sort){
          case 'a_z';
          $query->orderBy('title','asc');
@@ -39,6 +41,7 @@ class ArtWorkRepository implements ArtWorkRepositoryInterface{
          default;
          $query->latest();
         }
+        return $query->paginate(6);
          
     }
     public function find($id){
