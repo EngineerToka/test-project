@@ -15,12 +15,12 @@ class ArtWorkRepository implements ArtWorkRepositoryInterface{
         $this->imageRepo = $imageRepo;  
    }
     public function all($userId){
-        return ArtWork::where('user_id',$userId)->paginate(6);
+        return ArtWork::with('images')->where('user_id',$userId)->paginate(6);
     }
 
     public function allByCollection($collectionId, $search, $sort){
 
-        $query= ArtWork::where('collection_id',$collectionId);
+        $query= ArtWork::with('images')->where('collection_id',$collectionId);
         
         if($search){
             $query->where('title','like', "%{$search}%" );

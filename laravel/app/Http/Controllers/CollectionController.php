@@ -4,62 +4,73 @@ namespace App\Http\Controllers;
 
 use App\Models\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CollectionRequest;
+use App\Repositories\Interfaces\CollectionRepositoryInterface;
 
 class CollectionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $collectionRepo;
+
+    public function __construct(CollectionRepositoryInterface $collectionRepo )
     {
-        //
+        $this->collectionRepo = $collectionRepo;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function index(Request $request)
+    {
+       $userId= Auth::id();
+       $search= $request->get('search');
+       $sort= $request->get('sort');
+       $collections= $this->collectionRepo->all($userId,$search,$sort);
+      return view('frontend.index',compact('collections','search','sort'));
+    }
+
+
     public function create()
     {
-        //
+        return view('frontend.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+
+    public function store(CollectionRequest $request)
     {
-        //
+       $data = $request->validated();
+       $data['user_id'] =Auth::id();
+
+       $this->collectionRepo->create($data);
+        return redirect()->route('frontend.index')->with('sucess','Collection created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Collection $collection)
+
+    public function show($id)
     {
-        //
+       $collection= $this->collectionRepo->find($id);
+    return view('frontend.index',compact('collection'));
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Collection $collection)
+
+    public function edit($id)
     {
-        //
+        $collection= $this->collectionRepo->find($id);
+         return view('frontend.index',compact('collection'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Collection $collection)
+
+    public function update(CollectionRequest $request, $id)
     {
-        //
+        $data = $request->validated();
+        $this->collectionRepo->update($id,$data);
+        return redirect()->back()->with('sucess','Collection updated successfully.');
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Collection $collection)
+
+    public function destroy($id)
     {
-        //
+        $this->collectionRepo->delete($id);
+                return redirect()->route('frontend.index')->with('sucess','Collection deleted successfully.');
+
     }
 }

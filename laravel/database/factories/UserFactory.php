@@ -23,11 +23,20 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+         $profileImages = [
+            'uploads/users/avatar1.jpg',
+            'uploads/users/avatar2.jpg',
+            'uploads/users/avatar3.jpg',
+            'uploads/users/avatar4.jpg',
+        ];
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'role' => $this->faker->randomElement(['admin', 'artist', 'customer']),
+            'bio' => $this->faker->paragraph(2),
+            'profile_image' => $this->faker->randomElement($profileImages),
             'remember_token' => Str::random(10),
         ];
     }

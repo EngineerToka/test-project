@@ -13,7 +13,8 @@ class CollectionRepository implements CollectionRepositoryInterface{
    {
         $this->model = $collection;  
    }
-    public function all($userId, $search, $sort ){
+
+   public function all($userId, $search, $sort){
 
      $query = Collection::where('user_id', $userId)->withCount('artworks'); 
          if ($search) {

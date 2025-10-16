@@ -2,7 +2,7 @@
 namespace App\Repositories\Interfaces;
 
 interface CollectionRepositoryInterface {
-    public function all($userId);
+    public function all($userId, $search, $sort);
     public function find($id);
     public function create(array $data);
     public function update($id, array $data);

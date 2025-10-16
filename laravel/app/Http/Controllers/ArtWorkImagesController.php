@@ -1,65 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\art_work_images;
-use Illuminate\Http\Request;
+use App\Repositories\Interfaces\ArtWorkImageRepositoryInterface;
 
 class ArtWorkImagesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    protected $artWorkImageRepo;
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+   public function __construct(ArtWorkImageRepositoryInterface $ArtWorkImageRepo)
+   {
+        $this->artWorkImageRepo = $ArtWorkImageRepo;  
+   }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function deleteOneImage($id)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(art_work_images $art_work_images)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(art_work_images $art_work_images)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, art_work_images $art_work_images)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(art_work_images $art_work_images)
-    {
-        //
+        $this->artWorkImageRepo->deleteImagebyId($id);
+        return redirect()->back()->with('success','Image deleted successfully.');
     }
 }

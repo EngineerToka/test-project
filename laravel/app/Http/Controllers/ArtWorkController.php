@@ -5,46 +5,46 @@ namespace App\Http\Controllers;
 use App\Models\ArtWork;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ArtWorkRequest;
+use App\Repositories\Interfaces\ArtWorkRepositoryInterface;
 use App\Repositories\Interfaces\CollectionRepositoryInterface;
-use App\Repositories\Interfaces\ArtWorkImageRepositoryInterface;
 
 class ArtWorkController extends Controller
 {
    protected $artWorkRepo;
    protected $collectionRepo;
 
-    public function __construct(ArtWorkImageRepositoryInterface $artWorkRepo,CollectionRepositoryInterface $collectionRepo){
+    public function __construct(ArtWorkRepositoryInterface $artWorkRepo,CollectionRepositoryInterface $collectionRepo){
         $this->artWorkRepo= $artWorkRepo;
         $this->collectionRepo= $collectionRepo;
 
     }
     public function index(Request $request, $collcetionId)
     {
-        $search = $request->input('search');
-        $sort = $request->input('sort');
-        $collection = $this->collectionRepo->find($collcetionId);
+        $search = $request->get('search');
+        $sort = $request->get('sort');
         $artWorks= $this->artWorkRepo->allByCollection($collcetionId,$search,$sort);
 
-          return view('frontend.index',compact('$collection','artWorks','search','sort'));
+          return view('frontend.index',compact('collcetionId','artWorks','search','sort'));
         
         
     }
 
     public function create($collcetionId)
     {
-         $collection = $this->collectionRepo->find($collcetionId);
-        return view('frontend.index',compact('$collection'));
+        return view('frontend.index',compact('collcetionId'));
     }
 
     public function store(ArtWorkRequest $request,$collcetionId)
     {
         $data = $request->validated();
         $data['user_id'] = Auth::id();
-        $data['collection_id'] = $collcetionId;
-        $this->artWorkRepo->create($data);
+        $artWork=  $this->artWorkRepo->create($data);
+        $artWork->collection()->attach($collcetionId);
 
-      return redirect()->route('frontend.index', $collectionId)->with('success', 'Artwork added successfully.');
+
+      return redirect()->route('frontend.index', $collcetionId)->with('success', 'Artwork created successfully.');
     }
 
     public function edit($id)
@@ -56,13 +56,13 @@ class ArtWorkController extends Controller
     public function update(ArtWorkRequest $request, $id)
     {
         $data = $request->validated();
-        $this->artWorkRepo->update($data,$id);
-          return redirect()->route('artworks.index', $collectionId)->with('success', 'Artwork updated successfully.');
+        $this->artWorkRepo->update($id,$data);
+          return redirect()->back()->with('success', 'Artwork updated successfully.');
     }
 
     public function destroy($id)
     {
         $this->artWorkRepo->delete($id);
-          return redirect()->route('artworks.index', $collectionId)->with('success', 'Artwork deleted successfully.');
+          return redirect()->back()->with('success', 'Artwork deleted successfully.');
     }
 }
