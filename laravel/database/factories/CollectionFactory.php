@@ -20,7 +20,7 @@ class CollectionFactory extends Factory
         'description'=>$this->faker->sentence(10),
         'user_id'=>1,
         'slug'=>Str::slug($title),
-        'cover_image' => 'collections/' . $this->faker->image('public/storage/collections', 640, 480, null, false),
+        'cover_img' => 'collections/' . $this->faker->image('public/storage/collections', 640, 480, null, false),
         'created_at' => now(),
         ];
     }

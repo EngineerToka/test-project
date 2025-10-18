@@ -6,9 +6,11 @@ use App\Models\ArtWork;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Collection extends Model
 {
+     use HasFactory;
      protected $fillable = [
         'title',
         'description',
@@ -23,7 +25,7 @@ class Collection extends Model
     }
 
     public function artworks(){
-        return $this->belongsToMany(ArtWork::class)->withTimestamps();
+        return $this->belongsToMany(ArtWork::class,'art_work_collections')->withTimestamps();
     }
     public function setCoverImgAttribute($value)
     {

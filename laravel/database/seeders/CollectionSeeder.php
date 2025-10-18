@@ -2,17 +2,15 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Collection;
 use Database\Factories\CollectionFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class CollectionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        CollectionFactory::factory()->count(10)->create();
+        Collection::factory()->count(10)->create();
     }
 }

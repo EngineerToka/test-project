@@ -15,9 +15,9 @@ class ArtWorkCollectionSeeder extends Seeder
         $artWorks= ArtWork::all();
         $collections= Collection::all();
         foreach($collections as $collection){
-            $collection->artworks()->attach([
+            $collection->artworks()->attach(
                 $artWorks->random(rand(2, 5))->pluck('id')->toArray()
-            ]);
+            );
         }
     }
 }
